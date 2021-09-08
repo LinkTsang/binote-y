@@ -18,6 +18,19 @@ wss.on('connection', setupWSConnection);
 server.on('upgrade', (request, socket, head) => {
   // You may check auth of request here..
   wss.handleUpgrade(request, socket as Socket, head, (ws, request) => {
+    console.log(
+      'Client %s:%s connected',
+      request.socket.remoteAddress,
+      request.socket.remotePort
+    );
+    ws.on('close', (code: number, reason: string) => {
+      console.log(
+        'Client %s:%s closed',
+        request.socket.remoteAddress,
+        request.socket.remotePort
+      );
+    });
+    
     wss.emit('connection', ws, request);
   });
 });
